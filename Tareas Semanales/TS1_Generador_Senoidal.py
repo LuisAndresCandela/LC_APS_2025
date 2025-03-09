@@ -10,7 +10,7 @@ Created on Sat Mar  8 20:28:48 2025
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pdsmodulos as pds
+# import pdsmodulos as pds
 
 #%% Algunas premisas a tener en cuenta
 
@@ -38,7 +38,7 @@ def Generador_Senoidal ( Vmax, Vmed, f0, Fase, Num_Muestras, fs ):
     ts = 1/fs
     
     # Grilla de sampleo temporal
-    tt = np.linspace(0, (Num_Muestras-1)*ts, Num_Muestras).flatten()
+    tt = np.linspace(0, (Num_Muestras-1)*ts, Num_Muestras)
     
     Seno_Generado = Vmax * np.sin( 2 * np.pi * f0 * tt + Fase ) + Vmed
     
@@ -61,5 +61,37 @@ tt, seno = Generador_Senoidal( Vmax, Vmed, f0, Phi, N, fs )
 
 plt.figure(1)
 line_hdls = plt.plot( tt, seno )
+
+#%% Generador SINC
+
+def Generador_Sinc ( Vmax, Vmed, f0, Fase, Num_Muestras, fs ):
     
+    # Calculamos el tiempo de sampleo
+    ts = 1/fs
     
+    # Grilla de sampleo temporal
+    tt = np.linspace(0, (Num_Muestras-1)*ts, Num_Muestras)
+    
+    Sinc_Generado = Vmax * np.sinc( 2 * np.pi * f0 * tt + Fase ) + Vmed
+
+    # Devuelvo la grilla con todos los puntos que vamos a samplear y el seno que generamos con los parametros indicados
+    
+    return tt, Sinc_Generado
+
+#%% Finalizacion de funcion 
+
+#%% implementacion de funcion 
+
+Vmax = 5
+Vmed = 2
+f0 = 100
+Phi = 0    # Fase en radianes
+N = 1000
+fs = 1000
+
+tt, sinc1 = Generador_Sinc( Vmax, Vmed, f0, Phi, N, fs )
+    
+#%% Ploteo de la funcion
+
+plt.figure(1)
+line_hdls = plt.plot( tt, sinc1 )
