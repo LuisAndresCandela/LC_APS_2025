@@ -19,7 +19,7 @@ Created on Thu Mar  6 21:11:40 2025
 
 #%% Ejercicio 
 
-# 1) fs = 500 / 2*Pi -> ts = 1 / fs
+# 1) fs = 500 / Pi -> ts = 1 / fs // Porque la F de corte es Fs / 2
 
 # Es importante entender que a esto no afecta la funcion lineal 20 y la fase del seno
 
