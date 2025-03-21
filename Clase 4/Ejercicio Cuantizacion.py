@@ -151,7 +151,7 @@ line_hdls = plt.plot(tt, srq)
 # nn =  # señal de ruido de analógico
 # nq =  # señal de ruido de cuantización
 
-nq = srq - sr
+nq = sr - srq
 
 plt.figure(4)
 line_hdls = plt.plot(tt, nq)
@@ -159,13 +159,13 @@ line_hdls = plt.plot(tt, nq)
 #%% Visualización de resultados
 
 # cierro ventanas anteriores
-plt.close('all')
+#plt.close('all')
 
+#################
+# Señal temporal
 ##################
-# # Señal temporal
-# ##################
 
-plt.figure(1)
+plt.figure(7)
 
 
 plt.title('Señal muestreada por un ADC de {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q) )
@@ -177,7 +177,7 @@ plt.show()
 
 #%% 
 
-plt.figure(2)
+plt.figure(8)
 ft_SR = 1/N*np.fft.fft( sr, axis = 0 )
 ft_Srq = 1/N*np.fft.fft( srq, axis = 0 )
 ft_As = 1/N*np.fft.fft( analog_sig, axis = 0)
@@ -192,14 +192,14 @@ bfrec = ff <= fs/2
 Nnq_mean = np.mean(np.abs(ft_Nq)**2)
 nNn_mean = np.mean(np.abs(ft_Nn)**2)
 
-#plt.plot( ff_os[bfrec], 10* np.log10(2*np.abs(ft_As[bfrec])**2), color='orange', ls='dotted', label='$ s $ (sig.)' )
-#plt.plot( np.array([ ff_os[bfrec][0], ff_os[bfrec][-1] ]), 10* np.log10(2* np.array([nNn_mean, nNn_mean]) ), '--r', label= '$ \overline{n} = $' + '{:3.1f} dB'.format(10* np.log10(2* nNn_mean)) )
-#plt.plot( ff_os[bfrec], 10* np.log10(2*np.mean(np.abs(ft_SR)**2, axis=1)[bfrec]), ':g', label='$ s_R = s + n $' )
-#plt.plot( ff_os[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Srq)**2, axis=1)[bfrec]), lw=2, label='$ s_Q = Q_{B,V_F}\{s_R\}$' )
-#plt.plot( np.array([ ff_os[bfrec][0], ff_os[bfrec][-1] ]), 10* np.log10(2* np.array([Nnq_mean, Nnq_mean]) ), '--c', label='$ \overline{n_Q} = $' + '{:3.1f} dB'.format(10* np.log10(2* Nnq_mean)) )
-#plt.plot( ff_os[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Nn)**2, axis=1)[bfrec]), ':r')
-#plt.plot( ff_os[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Nq)**2, axis=1)[bfrec]), ':c')
-#plt.plot( np.array([ ff[bfrec][-1], ff[bfrec][-1] ]), plt.ylim(), ':k', label='BW', lw = 0.5  )
+plt.plot( ff[bfrec], 10* np.log10(2*np.abs(ft_As[bfrec])**2), color='orange', ls='dotted', label='$ s $ (sig.)' )
+plt.plot( np.array([ ff[bfrec][0], ff[bfrec][-1] ]), 10* np.log10(2* np.array([nNn_mean, nNn_mean]) ), '--r', label= '$ \overline{n} = $' + '{:3.1f} dB'.format(10* np.log10(2* nNn_mean)) )
+#plt.plot( ff[bfrec], 10* np.log10(2*np.mean(np.abs(ft_SR)**2, axis=1)[bfrec]), ':g', label='$ s_R = s + n $' )
+#plt.plot( ff[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Srq)**2, axis=1)[bfrec]), lw=2, label='$ s_Q = Q_{B,V_F}\{s_R\}$' )
+plt.plot( np.array([ ff[bfrec][0], ff[bfrec][-1] ]), 10* np.log10(2* np.array([Nnq_mean, Nnq_mean]) ), '--c', label='$ \overline{n_Q} = $' + '{:3.1f} dB'.format(10* np.log10(2* Nnq_mean)) )
+#plt.plot( ff[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Nn)**2, axis=1)[bfrec]), ':r')
+#plt.plot( ff[bfrec], 10* np.log10(2*np.mean(np.abs(ft_Nq)**2, axis=1)[bfrec]), ':c')
+plt.plot( np.array([ ff[bfrec][-1], ff[bfrec][-1] ]), plt.ylim(), ':k', label='BW', lw = 0.5  )
 
 plt.title('Señal muestreada por un ADC de {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q) )
 plt.ylabel('Densidad de Potencia [dB]')
@@ -207,15 +207,27 @@ plt.xlabel('Frecuencia [Hz]')
 axes_hdl = plt.gca()
 axes_hdl.legend()
 
+
+# Vemos que el ruido naranja que tenemos es el ruido de cuantizacion del sistema al querer
+# representar todo el sistema. Es decir, es el ruido que tenemos por digitalizar y representar
+# los la señal en la PC. Ruido del sistema numerico de doble presición, o ruido del 
+# Sistema de representacion numerico 
+
 #############
  # Histograma
 #############
 
-plt.figure()
+# Esto representa a la distribuicion Uniforme teorica vs la que tenemos empiricamente. Si fuese
+# ideal,tendriamos la cajita perfectamente llena
+
+# Por mas que tuvimos un ruido normal, es esperable que tengamos una distribucion de ruido uniforme que es lo que 
+# esperabamos debido al ruido que tenemos al cuantizar que obedece dicha distribucion uniforme
+
+plt.figure(6)
 bins = 10
-# plt.hist(nq.flatten(), bins=2*bins)
+plt.hist(nq.flatten(), bins=bins)
 #plt.hist(nqf.flatten()/(q/2), bins=2*bins)
-# plt.plot( np.array([-q/2, -q/2, q/2, q/2]), np.array([0, N*R/bins, N*R/bins, 0]), '--r' )
+plt.plot( np.array([-q/2, -q/2, q/2, q/2]), np.array([0, N/bins, N/bins, 0]), '--r' )
 #plt.plot( np.array([-1/2, -1/2, 1/2, 1/2]), np.array([0, N*R/bins, N*R/bins, 0]), '--r' )
 plt.title( 'Ruido de cuantización para {:d} bits - $\pm V_R= $ {:3.1f} V - q = {:3.3f} V'.format(B, Vf, q))
 
