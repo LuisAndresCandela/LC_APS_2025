@@ -216,7 +216,7 @@ ecg_filtrada = sig.sosfiltfilt(mi_sos, ecg_segment)
 #%% Gráfico: señal original vs filtrada
 
 # Crear 3 subplots (uno adicional para el zoom)
-fig, axs = plt.subplots(3, 1, figsize=(12, 8), sharex=False)
+#fig, axs = plt.subplots(3, 1, figsize=(12, 8), sharex=False)
 
 # Señal original
 axs[0].plot(t_segment, ecg_segment, color='blue')
