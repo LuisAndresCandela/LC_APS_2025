@@ -64,9 +64,5 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# Falta calcular la señal final restando ECG_med 2 a la original
-
-# Ojo que esto agrega saltos y morfologias a la señal debido a las limitaciones del metodo
-# 
 
 
