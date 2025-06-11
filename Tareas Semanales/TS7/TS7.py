@@ -278,6 +278,88 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
+#%%
+
+# PARTO EL DISEÑO PARA MEJORAR LA PERFORMANCE
+
+import numpy as np
+import matplotlib.pyplot as plt
+from pytc2.filtros_digitales import fir_design_ls
+
+# Parámetros
+fs = 1000  # Asegúrate de definir fs apropiadamente
+fstop = np.array([0.5, 50])
+fpass = np.array([1, 35])
+ripple = 2
+attenuation = 40
+fn = fs / 2  # Frecuencia de Nyquist
+
+N = 750  # orden del filtro
+fft_sz = 4096
+
+# ----------------------------
+# Filtro Pasa Altos (corte en fpass[0])
+# ----------------------------
+Be_hp = [
+    0.0, fstop[0]/fn,     # detención
+    fpass[0]/fn, 1.0      # paso
+]
+D_hp = [0, 0, 1, 1]
+W_hp = [10**(attenuation/20), 1]
+
+fir_hp = fir_design_ls(order=N, band_edges=Be_hp, desired=D_hp, weight=W_hp, filter_type='m', grid_density=16)
+
+# ----------------------------
+# Filtro Pasa Bajos (corte en fpass[1])
+# ----------------------------
+Be_lp = [
+    0.0, fpass[1]/fn,      # paso
+    fstop[1]/fn, 1.0       # detención
+]
+D_lp = [1, 1, 0, 0]
+W_lp = [1, 10**(attenuation/20)]
+
+fir_lp = fir_design_ls(order=N, band_edges=Be_lp, desired=D_lp, weight=W_lp, filter_type='m', grid_density=16)
+
+# ----------------------------
+# Convolución para obtener el filtro Pasabanda
+# ----------------------------
+fir_bp = np.convolve(fir_hp, fir_lp)
+
+# ----------------------------
+# Evaluación en frecuencia
+# ----------------------------
+H = np.fft.fft(fir_bp, fft_sz)
+frecuencias = np.linspace(0, fn, fft_sz//2)
+
+# ----------------------------
+# Graficar
+# ----------------------------
+plt.figure(figsize=(10, 5))
+plt.plot(frecuencias, 20*np.log10(np.abs(H[:fft_sz//2]) + 1e-8), label='Filtro FIR Pasabanda (HP * LP)')
+plt.title("Respuesta en Frecuencia del Filtro FIR Pasabanda")
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("Magnitud [dB]")
+plt.ylim([-80, 5])
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+
+# Plantilla de referencia
+plot_plantilla(filter_type='bandpass',
+               fpass=fpass,
+               ripple=ripple,
+               fstop=fstop,
+               attenuation=attenuation,
+               fs=fs)
+
+plt.title(f"Filtro FIR Pasabanda (HP * LP) - Orden efectivo {len(fir_bp)-1}")
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("Magnitud [dB]")
+plt.grid()
+plt.tight_layout()
+plt.show()
+
 
 #%% Aplicación de los 4 filtros y graficado
 

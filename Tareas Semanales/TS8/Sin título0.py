@@ -32,7 +32,7 @@ t_ecg = np.arange(len(ecg_one_lead)) / fs_ecg
 
 #%% --- Filtro de mediana (Baseline por mediana) ---
 win1_samples = 200
-win2_samples = 1200
+win2_samples = 600
 
 # Asegurar que sean impares
 if win1_samples % 2 == 0:

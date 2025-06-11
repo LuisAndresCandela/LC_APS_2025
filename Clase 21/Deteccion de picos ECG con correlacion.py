@@ -70,7 +70,7 @@ spline_total = cs(t_ecg)
 # Señal filtrada (original menos la línea de base)
 ecg_filtrada = ecg_one_lead - spline_total
 
-#%% AHora quiero ver la señal del hearbeat 1
+#%% AHora quiero ver la señal del qrs_pattern1
 
 qrs_pattern = np.squeeze(mat_struct['qrs_pattern1']).astype(int)
     
