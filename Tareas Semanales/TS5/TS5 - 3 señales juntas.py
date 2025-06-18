@@ -22,7 +22,7 @@ import scipy.io.wavfile as wavfile
 import os
 from scipy.fft import fft
 import pandas as pd
-from tabulate import tabulate
+#from tabulate import tabulate
 
 def vertical_flaten(a):
 
@@ -130,7 +130,7 @@ print(f"BW centrado al 95% de la potencia: {bw_95:.2f} Hz (de {bw_95_low:.1f} Hz
 print(f"BW centrado al 98% de la potencia: {bw_98:.2f} Hz (de {bw_98_low:.1f} Hz a {bw_98_high:.1f} Hz)")
 
 #%% Subplots: Forma de onda + PSD dB + PSD Lineal con sombreado
-plt.style.use('seaborn-v0_8-darkgrid')
+#plt.style.use('seaborn-v0_8-darkgrid')
 fig, axs = plt.subplots(3, 1, figsize=(14, 12))
 
 # Anotar la frecuencia del pico principal
